@@ -1,0 +1,9 @@
+aws dynamodb get-item --table-name lo_students --key '{"s_id" : {"S" : "5"}}' --profile loadmin
+
+aws dynamodb get-item --table-name lo_students --key '{"s_id" : {"S" : "5"}}' --return-consumed-capacity TOTAL --profile loadmin
+
+# 强一致性读，消耗翻倍。
+aws dynamodb get-item --table-name lo_students --key '{"s_id" : {"S" : "5"}}' --return-consumed-capacity TOTAL --consistent-read --profile loadmin
+
+# 默认读是1，会报错。增加RCU之后，再次执行以下scan命令，就成功了。
+aws dynamodb scan --table-name lo_students --filter-expression "country=:desiredcountry" --expression-attribute-values '{ ":desiredcountry" : {"S" : "China"}}' --return-consumed-capacity TOTAL --profile loadmin
